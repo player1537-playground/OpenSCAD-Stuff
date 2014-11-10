@@ -45,12 +45,4 @@ module die($size) {
 }
 
 $fn = 20;
-rotate([45, 0,45])
-difference() {
-	die(10);
-	scale(0.9)
-		die(10);
-	translate([5, 0, 0])
-		cube(10, center=true);
-}
-
+die(20);
