@@ -57,6 +57,9 @@ ng_motor_mhh = ng_motor_mh;
 // Color
 ng_motor_body_color = "steelblue";
 ng_motor_axle_color = "white";
+// Overall stats
+ng_motor_w = ng_motor_mw;
+ng_motor_h = ng_motor_bh + ng_motor_sbh + ng_motor_dah;
 
 module ng_motor() {
   difference() {

@@ -24,15 +24,14 @@ module reuleaux_triangle(r=1) {
 
 module 3d_reuleaux_triangle(r=1) {
   angle = 60;
-  rotate_extrude()
-  reuleaux_triangle(r);
+  rotate_extrude() {
+    intersection() {
+      reuleaux_triangle(r);
+      square(r);
+    }
+  }
 }
 
 $fn = 75;
-r = 10;
 
-3d_reuleaux_triangle(r);
-
-*translate([0, -r/sqrt(3)])
-linear_extrude(height=1)
-reuleaux_triangle(r);
+3d_reuleaux_triangle(40);
