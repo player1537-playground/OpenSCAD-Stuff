@@ -61,7 +61,7 @@ ng_motor_axle_color = "white";
 ng_motor_w = ng_motor_mw;
 ng_motor_h = ng_motor_bh + ng_motor_sbh + ng_motor_dah;
 
-module ng_motor() {
+module ng_motor($fn=$fn) {
   difference() {
     union() {
       // Main motor body
@@ -74,11 +74,11 @@ module ng_motor() {
       // Larger, lower shaft base
       color(ng_motor_body_color)
 	translate(ng_motor_sbpos)
-	cylinder(r=ng_motor_sbr, h=ng_motor_sbh, $fn=20);
+	cylinder(r=ng_motor_sbr, h=ng_motor_sbh);
       // Small insignificant circle
       *color(ng_motor_body_color)
       	translate([-.5,0,2.75])
-	cylinder(r=1, h=25.75, $fn=20, center=true);
+	cylinder(r=1, h=25.75, center=true);
       // Drive gear beside the shaft base
       color(ng_motor_body_color)
 	translate(ng_motor_dgpos)
@@ -86,18 +86,16 @@ module ng_motor() {
       // Drive axle
       color(ng_motor_axle_color)
 	translate(ng_motor_dapos)
-	cylinder(r=ng_motor_dar, h=ng_motor_dah, $fn=20);
+	cylinder(r=ng_motor_dar, h=ng_motor_dah);
     }
     // Angled part on the bottom of the servo
     translate(ng_motor_cpos)
       rotate(ng_motor_cangle)
       cube(ng_motor_cdim, center=true);
     // Mounting holes
-    echo(ng_motor_mhx);
     for (hole = ng_motor_mhx) {
-      echo(hole);
       translate([hole, ng_motor_mhy, ng_motor_mhbot])
-	cylinder(r=ng_motor_mhr, h=ng_motor_mhh, $fn=20);
+	cylinder(r=ng_motor_mhr, h=ng_motor_mhh);
     }
   }
 }
