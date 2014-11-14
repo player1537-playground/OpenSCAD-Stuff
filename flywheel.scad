@@ -1,4 +1,4 @@
-tank_inner_radius = 20;
+tank_inner_radius = 51;
 tank_wall_thickness = 2;
 tank_outer_radius = tank_wall_thickness + tank_inner_radius;
 
@@ -11,6 +11,19 @@ axle_hole_outer_radius = axle_hole_inner_radius + tank_wall_thickness;
 
 water_hole_radius = 2;
 water_hole_offset_radius = (tank_inner_radius + axle_hole_outer_radius) / 2;
+
+module cylinder_shell(inner_radius=1, outer_radius=false, thickness=false, height=1) {
+	if (outer_radius == false && thickness == false) {
+		echo("Must supply one of outer_radius or thickness");
+	}
+	
+	outer_radius = outer_radius != false ? outer_radius : inner_radius + thickness;
+	
+	difference() {
+		cylinder(r=outer_radius, h=height);
+		cylinder(r=inner_radius, h=height);
+	}
+}
 
 
 module tank() {
@@ -36,5 +49,5 @@ difference() {
 	tank();
 	translate([0, 0, tank_outer_height - tank_wall_thickness])
 		cylinder(r=tank_outer_radius, h=tank_wall_thickness);
-	cube([tank_outer_radius, tank_outer_radius, tank_outer_height]);
+	*cube([tank_outer_radius, tank_outer_radius, tank_outer_height]);
 }
