@@ -4,11 +4,6 @@ base_l = 40;
 base_w = 20;
 base_h = 1;
 
-aligner_l = base_l;
-aligner_w = 1;
-aligner_h = 1;
-aligner_delta = 2;
-
 tube_r = base_w / 2 - 3;
 tube_h = 40;
 tube_yoffset = 10;
@@ -27,9 +22,6 @@ differed("+", "-") {
       translated([base_w / 2, base_w / 2, 0])
       rotated(60)
       box([50, 50, 50], anchor=[-1, 0, 0], $class="-");
-    translated([0, 1, 0], [-aligner_delta - aligner_w, 0, aligner_delta + aligner_w])
-      align(top)
-      box([aligner_l, aligner_w, aligner_h], anchor=bottom, $class="+");
     differed("<", ">", $class="+")
       rotated([180, 0, 0])
       box([tube_base_w, tube_base_l, tube_base_h], anchor=bottom, $class="<")
