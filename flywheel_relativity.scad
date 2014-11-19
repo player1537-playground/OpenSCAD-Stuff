@@ -8,7 +8,8 @@ module rod_shell(r=1, h=1, thickness=0.5) {
       rod([$parent_size.x - thickness, $parent_size.y - thickness, $parent_size.z], $class="-");
     }
   }
-  assign($parent_size=[2 * r, 2 * r, h])
+  rod(r=r, h=h, $class="_", $show="!")
+    assign($show="", $class="")
     children();
 }
 
@@ -20,15 +21,27 @@ module supports(r=1, h=1, thickness=0.5) {
   }
 }
 
-$fn = 20;
-rod_shell(6, 5, thickness=0.5) {
-  assign($max_r=$parent_size.x / 2, $step_r=2) {
-    echo(str("$max_r=", $max_r, "; $step_r=", $step_r));
-    color("red") supports(r=2, h=$parent_size.z, thickness=0.5);
-  }
-  align(bottom)
+module flywheel(inner_radius=6, axle_radius=2, height=5, thickness=0.5, support_step=2) {
+  rod_shell(r=inner_radius, h=height, thickness=thickness) {
+    assign($max_r=$parent_size.x / 2, $step_r=support_step) {
+      echo(str("$max_r=", $max_r, "; $step_r=", $step_r));
+      color("red") supports(r=axle_radius, h=$parent_size.z, thickness=thickness);
+    }
     mirrored(z)
-    rod(r=$parent_size.x / 2, h=1, anchor=bottom);
+      align(bottom)
+      rod(r=$parent_size.x / 2, h=thickness, anchor=bottom);
+    differed("+", "-") {
+      box([$parent_size.x / 2, thickness, height], anchor=[-1, 0, 0], $class="+");
+      rod(r=axle_radius, h=height, $class="-");
+      rod_shell(r=inner_radius + thickness / 2, h=height, thickness=thickness, $class="-");
+    }
+  }
+}
+
+$fn = 20;
+difference() {
+  flywheel(6, 2, 5, 0.5, 2);
+  rod(r=6, h=5, anchor=top);
 }
 
 *assign($max_r=5, $step_r=2)
