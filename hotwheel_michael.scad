@@ -15,7 +15,7 @@ tube_base_l = tube_base_w;
 tube_base_h = 20;
 
 differed("+", "-") {
-  box([base_l, base_w, base_h], anchor=bottom, $class="+") {
+  box([base_l, base_w, base_h], anchor=bottom, $class="+")
     align($inward)
       mirrored(x)
       mirrored(y)
