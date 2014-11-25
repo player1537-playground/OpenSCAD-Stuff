@@ -45,6 +45,14 @@ module fc_28_12() {
     }
 }
 
+zippy_l = 35;
+zippy_w = 17;
+zippy_h = 76;
+
+module zippy(anchor=bottom) {
+    box([zippy_l, zippy_w, zippy_h], anchor=anchor, $class=$class);
+}
+
 module motor_mount() {
     assign($fn=20)
     rotated([0, 0, -45])
@@ -71,22 +79,69 @@ module motor_mount() {
     }
 }
 
-//fc_28_12();
+battery_mount_thickness = 4;
+battery_mount_wall = 10;
 
-color("blue")
-motor_mount();
-rotated([180, 0, 0])
-translated([0, 0, 1])
-color("orange")
-fc_28_12();
-*color("red")
-differed("+", "-") {
-    translated([0, 0, base_height])
-    box([300, foam_board_thickness, 150], anchor=bottom, $class="+")
-    align(bottom)
-    mirrored(x)
-    translated([$parent_size.x / 2 / 2, 0, 0])
-    box([$parent_size.x / 3, foam_board_thickness, 20], anchor=bottom, $class="-")
-    translated([0, 0, -$parent_size.z - 5])
-    parent($class="+");
+module battery_mount() {
+    differed("+", "-", $class=$class) {
+	box([zippy_l + 2 * battery_mount_thickness, zippy_w, battery_mount_thickness], anchor=bottom, $class="+") {
+	    align(bottom)
+	    box([$parent_size.x + 2 * battery_mount_wall, $parent_size.y, $parent_size.z], anchor=bottom, $class="+")
+	    align(bottom)
+	    box([$parent_size.x, foam_board_thickness, $parent_size.z], anchor=bottom, $class="-");
+
+	    mirrored(y)
+	    align(top)
+	    translated([0, $parent_size.y / 2, 0, 0])
+	    align([0, 1, 0])
+	    box([$parent_size.x, battery_mount_thickness, zippy_h], anchor=[0, -1, -1], $class="+");
+
+	    mirrored(x)
+	    align(top)
+	    translated([$parent_size.x / 2, 0, 0])
+	    box([battery_mount_thickness, $parent_size.y, zippy_h], anchor=[1, 0, -1], $class="+")
+	    align([1, 0, -1])
+	    box([battery_mount_wall, foam_board_thickness + 2 * battery_mount_thickness, $parent_size.z], anchor=[-1, 0, -1], $class="+")
+	    align([-1, 0, -1])
+	    box([$parent_size.x, foam_board_thickness, $parent_size.z], anchor=[-1, 0, -1], $class="-");
+	}
+    }
+    %translated([0, 0, battery_mount_thickness])
+    zippy();
+
+    %box([100, foam_board_thickness, 100], anchor=bottom);
+}
+
+module plane() {
+    color("blue")
+    motor_mount();
+
+    rotated([180, 0, 0])
+    translated([0, 0, 1])
+    color("orange")
+    fc_28_12();
+
+    color("red")
+    differed("+", "-") {
+	translated([0, 0, base_height])
+	box([300, foam_board_thickness, 150], anchor=bottom, $class="+") {
+	    align(top)
+	    zippy(anchor=top, $class="-");
+
+	    align(bottom)
+	    mirrored(x)
+	    translated([$parent_size.x / 2 / 2, 0, 0])
+	    box([$parent_size.x / 3, foam_board_thickness, 20], anchor=bottom, $class="-")
+	    translated([0, 0, -$parent_size.z - 5])
+	    parent($class="+");
+	}
+    }
+}
+
+plane();
+
+*differed("*", "/") {
+    battery_mount($class="*");
+    *translated([0, 0, 20])
+    box([100, 100, 100], anchor=bottom, $class="/");
 }
