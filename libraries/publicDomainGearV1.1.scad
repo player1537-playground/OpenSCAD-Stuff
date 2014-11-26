@@ -134,6 +134,33 @@ module rack (
 					);
 };	
 
+module rack_outline (
+	mm_per_tooth    = 3,    //this is the "circular pitch", the circumference of the pitch circle divided by the number of teeth
+	number_of_teeth = 11,   //total number of teeth along the rack
+	height          = 120,  //height of rack in mm, from tooth top to far side of rack
+	pressure_angle  = 28,   //Controls how straight or bulged the tooth sides are. In degrees.
+	backlash        = 0.0   //gap between two meshing teeth, in the direction along the circumference of the pitch circle
+) {
+	assign(pi = 3.1415926)
+	assign(a = mm_per_tooth / pi) //addendum
+	assign(t = a*cos(pressure_angle)-1)         //tooth side is tilted so top/bottom corners move this amount
+		for (i = [0:number_of_teeth-1] )
+			translate([i*mm_per_tooth,0,0])
+				polygon(
+					points=[
+						[-mm_per_tooth * 3/4,                 a-height],
+						[-mm_per_tooth * 3/4 - backlash,     -a],
+						[-mm_per_tooth * 1/4 + backlash - t, -a],
+						[-mm_per_tooth * 1/4 + backlash + t,  a],
+						[ mm_per_tooth * 1/4 - backlash - t,  a],
+						[ mm_per_tooth * 1/4 - backlash + t, -a],
+						[ mm_per_tooth * 3/4 + backlash,     -a],
+						[ mm_per_tooth * 3/4,                 a-height],
+					],
+					paths=[[0,1,2,3,4,5,6,7]]
+				);
+};	
+
 //These 5 functions let the user find the derived dimensions of the gear.
 //A gear fits within a circle of radius outer_radius, and two gears should have
 //their centers separated by the sum of their pictch_radius.
