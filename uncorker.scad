@@ -57,10 +57,53 @@ module uncorker_handle() {
 	children();
 }
 
-rod_rack(mm_per_tooth=uc_mm_per_tooth, height=uc_rrh, inner_radius=uc_rrr)
+module uncorker_body() {
+	differed("+", "-")
+	hulled("H") {
+		rod(r=10, h=10, anchor=bottom, $class="H +")
+		align(top)
+		box([12, 10, 5], anchor=bottom, $class="H +")
+		align(bottom)
+		box([12, 10, 40], anchor=bottom, $class="+")
+		align(top)
+		rod(r=5, h=50, anchor=top, $class="-");
+
+		ball(1, $class="H +");
+	}
+}
+
+uncorker_body();
+
+
+*rod_rack(mm_per_tooth=uc_mm_per_tooth, height=uc_rrh, inner_radius=uc_rrr)
 align(top)
 uncorker_handle();
 
 *rod_rack(mm_per_tooth=9, height=100, inner_radius=10)
 align(bottom)
 %rod(size=hammard($parent_size, [1,1,1]), anchor=bottom);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
