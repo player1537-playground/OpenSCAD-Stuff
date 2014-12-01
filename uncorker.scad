@@ -59,20 +59,34 @@ module uncorker_handle() {
 
 module uncorker_body() {
 	differed("+", "-")
-	hulled("H") {
+	hulled("h", $class="-")
+	hulled("H", $class="+") {
 		rod(r=10, h=10, anchor=bottom, $class="H +")
+		assign(base_height = $parent_size.z)
+		assign(base_radius = $parent_size.x / 2)
 		align(top)
-		box([12, 10, 5], anchor=bottom, $class="H +")
+		box([12, 5, 5], anchor=bottom, $class="H +")
 		align(bottom)
-		box([12, 10, 40], anchor=bottom, $class="+")
+		box([$parent_size.x, $parent_size.y, 40], anchor=bottom, $class="+")
 		align(top)
-		rod(r=5, h=50, anchor=top, $class="-");
+		assign(shaft_height = $parent_size.z)
+		rod(r=min($parent_size.x, $parent_size.y) / 2 - 1, h=$parent_size.z + 10, anchor=top, $class="-")
+		assign(overhang = $parent_size.z - shaft_height)
+		align(bottom)
+		#rod(r=$parent_size.x / 2, h=overhang, anchor=top, $class="-")
+		align(bottom)
+		rod(r=$parent_size.x / 2, h=base_height + $parent_size.z, anchor=bottom, $class="h -")
+		align(bottom)
+		rod(r=base_radius - 2, h=base_height - 2 + overhang, anchor=bottom, $class="h -");
 
 		ball(1, $class="H +");
 	}
 }
 
-uncorker_body();
+difference() {
+	uncorker_body();
+	box([100, 100, 100], anchor=[-1, 0, 0]);
+}
 
 
 *rod_rack(mm_per_tooth=uc_mm_per_tooth, height=uc_rrh, inner_radius=uc_rrr)
@@ -82,28 +96,3 @@ uncorker_handle();
 *rod_rack(mm_per_tooth=9, height=100, inner_radius=10)
 align(bottom)
 %rod(size=hammard($parent_size, [1,1,1]), anchor=bottom);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
