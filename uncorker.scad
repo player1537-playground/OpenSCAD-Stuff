@@ -21,7 +21,8 @@ module rod_rack(mm_per_tooth=9, height=10, inner_radius=12, anchor=$inward, orie
     children();
 }
 
-module cone(r1, r2=r1, h) {
+module cone(r1, r2=false, h) {
+    r2 = r2 != false ? r2 : r1;
     if (_has_token($class, $show))
     cylinder(r1=r1, r2=r2, h=h);
     _rod(r=r1, h=h, anchor=bottom)
