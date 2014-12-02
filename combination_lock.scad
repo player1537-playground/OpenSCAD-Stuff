@@ -20,6 +20,14 @@ END = 2;
 
 // Dial shaft
 
+// Dial shaft x offset, z offset
+dial_shaft_x = -20;
+dial_shaft_z = 40;
+// Back wall
+back_wall_length = 100;
+back_wall_height = 50;
+back_wall_thickness = 10;
+
 module inner_dial(value, stopper_location=START) {
 	if (_has_token($class, $show))
 	differed("+", "-") {
@@ -53,21 +61,32 @@ module dial_shaft(num_dials=1, clearance=0, excess=0) {
 	assign(num_middle = num_dials - num_ends)
 	assign(num_dial_thickness = num_ends + num_middle * 2 + 1)
 	assign(num_clearance = num_dials - 1)
-	assign(width = inner_dial_hole_r - clearance)
+	assign(width = 2 * (inner_dial_hole_r - clearance))
 	assign(height = num_dial_thickness * inner_dial_thickness + num_clearance * clearance + 2 * excess)
 	translated([0, 0, -excess])
-	box([width, width, height], anchor=bottom)
+	rod([width, width, height], anchor=bottom)
 
 	translated([0, 0, excess])
 	children();
 }
 
+module back_wall() {
+	box([back_wall_length, 0, back_wall_height])
+	children();
+}
+
+back_wall();
+
+translated([0, dial_shaft_x, dial_shaft_z])
+rotate([0, 90, 0])
 dial_shaft(3, 1, excess=10)
 align(bottom)
-inner_dial(10, START)
+inner_dial(5, START)
 align(top)
 translated([0, 0, 1])
-inner_dial(5, MIDDLE)
+inner_dial(10, MIDDLE)
 align(top)
 translated([0, 0, 1])
-inner_dial(8, END);
+inner_dial(8, END)
+align(top)
+back_wall();
