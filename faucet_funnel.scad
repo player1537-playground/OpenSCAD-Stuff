@@ -40,10 +40,10 @@ module angle_intersected(class="", start_angle=0, end_angle=360) {
 }
 
 module faucet_adapter(faucet_radius, outer_radius, 
-                      faucet_length, overhang, 
+                      faucet_length, 
                       slot_height, slot_depth, slot_width) {
 	differed("+", "-") {
-		rod(r=outer_radius, h=faucet_length + overhang, anchor=bottom, $class="+")
+		rod(r=outer_radius, h=faucet_length, anchor=bottom, $class="+")
 		align(bottom) {
 			rod(r=faucet_radius, h=$parent_size.z, anchor=bottom, $class="-");
 	
@@ -59,7 +59,7 @@ module faucet_adapter(faucet_radius, outer_radius,
 			}
 		}
 	}
-	_rod(r=outer_radius, h=faucet_length + overhang, anchor=bottom)
+	_rod(r=outer_radius, h=faucet_length, anchor=bottom)
 	children();
 }
 
@@ -90,13 +90,32 @@ module funnel_adapter(adapter_radius, outer_radius, hole_radius,
 	}
 }
 
-faucet_adapter(faucet_radius=7, outer_radius=10, faucet_length=5, overhang=5, slot_depth=1, slot_height=8, slot_width=1)
-align(bottom)
-translated([0, 0, -1])
-funnel_adapter(adapter_radius=10, outer_radius=13, hole_radius=5, funnel_length=7, slot_length=5, slot_depth=1, slot_offset=0, anchor=top);
+module faucet_funnel(faucet_radius, hole_radius, shell, 
+                     faucet_length, slot_length, funnel_length,
+                     slot_depth) {
+	assign(slot_width = 1)
+	faucet_adapter(faucet_radius=faucet_radius, 
+	               outer_radius=faucet_radius + shell,
+	               faucet_length=faucet_length, 
+	               slot_depth=slot_depth,
+	               slot_height=slot_length, 
+	               slot_width=slot_width)
+	align(bottom)
+	translated([0, 0, -1])
+	funnel_adapter(adapter_radius=faucet_radius + shell, 
+	               outer_radius=faucet_radius + shell + shell, 
+	               hole_radius=hole_radius,
+	               funnel_length=funnel_length,
+	               slot_length=slot_length,
+	               slot_depth=slot_depth,
+	               slot_offset=0,
+	               anchor=top);
+}
 
-
-
+faucet_funnel(faucet_radius=10, faucet_length=5,
+              hole_radius=5, funnel_length=5,
+              shell=2,
+              slot_length=4, slot_depth=1);
 
 
 
